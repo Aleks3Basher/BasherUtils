@@ -20,7 +20,8 @@ public enum NBTType {
     STRING(9),
     COMPOUND(10),
     UUID(11),
-    STRING_LIST(12);
+    STRING_LIST(12),
+    ITEM_STACK(13);
 
     private final int id;
 

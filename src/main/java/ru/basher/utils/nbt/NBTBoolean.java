@@ -43,6 +43,11 @@ public class NBTBoolean implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTBoolean(value);
+    }
+
+    @Override
     public String toString() {
         return value ? "1" : "0";
     }

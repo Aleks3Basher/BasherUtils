@@ -39,6 +39,11 @@ public class NBTString implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTString(value);
+    }
+
+    @Override
     public String toString() {
         return value;
     }

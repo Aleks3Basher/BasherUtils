@@ -33,6 +33,11 @@ public class NBTEmpty implements NBTBase {
     public void read(@NotNull DataInputStream in) throws Exception {}
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTEmpty();
+    }
+
+    @Override
     public String toString() {
         return "";
     }

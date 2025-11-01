@@ -39,6 +39,11 @@ public class NBTShort implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTShort(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

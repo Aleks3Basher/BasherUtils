@@ -39,6 +39,11 @@ public class NBTByte implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTByte(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

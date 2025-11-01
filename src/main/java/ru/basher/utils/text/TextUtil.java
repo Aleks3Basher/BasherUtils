@@ -4,6 +4,9 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
@@ -70,7 +73,7 @@ public class TextUtil {
 
     @NotNull
     public static String removeColors(@NotNull String text) {
-        return text.replace("§", "&").replaceAll("&#[A-Fa-f0-9]{6}", "").replaceAll("&[0-9a-fk-or]", "");
+        return text.replace("§", "&").replaceAll("&#[A-Fa-f0-9]{6}", "").replaceAll("&[A-Fa-fK-Ok-o0-9rR]", "");
     }
 
     @NotNull
@@ -165,4 +168,9 @@ public class TextUtil {
             };
         }
     }
+
+    public static @NotNull Component jsonToComponent(@NotNull String json) {
+        return GsonComponentSerializer.gson().deserialize(json);
+    }
+
 }

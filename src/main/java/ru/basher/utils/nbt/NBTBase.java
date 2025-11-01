@@ -1,9 +1,11 @@
 package ru.basher.utils.nbt;
 
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.List;
 
 public interface NBTBase {
 
@@ -51,6 +53,16 @@ public interface NBTBase {
     default @NotNull String asString() {
         return ((NBTString) this).getValue();
     }
+
+    default @NotNull List<String> asStringList() {
+        return ((NBTStringList) this).getValue();
+    }
+
+    default @NotNull ItemStack asItemStack() {
+        return ((NBTItemStack) this).getValue();
+    }
+
+    @NotNull NBTBase copy();
 
 
 }

@@ -1,6 +1,8 @@
 package ru.basher.utils.nbt;
 
 import lombok.Getter;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +19,10 @@ public class NBTCompound implements NBTBase {
     private final Map<String, NBTBase> tags = new HashMap<>();
 
     public NBTCompound() {
+    }
+
+    public NBTCompound(Map<String, NBTBase> tags) {
+        this.tags.putAll(tags);
     }
 
     public NBTCompound(DataInputStream in) throws Exception {
@@ -53,20 +59,23 @@ public class NBTCompound implements NBTBase {
         return tags.containsKey(key);
     }
 
-    public void set(@NotNull String key, @NotNull NBTBase nbtBase) {
+    public @NotNull NBTCompound set(@NotNull String key, @NotNull NBTBase nbtBase) {
         tags.put(key, nbtBase);
+        return this;
     }
     @NotNull
     public NBTBase get(@NotNull String key) {
         NBTBase base = tags.get(key);
         return base == null ? new NBTEmpty() : base;
     }
-    public void remove(@NotNull String key) {
+    public @NotNull NBTCompound remove(@NotNull String key) {
         tags.remove(key);
+        return this;
     }
 
-    public void setEmpty(@NotNull String key) {
+    public @NotNull NBTCompound setEmpty(@NotNull String key) {
         tags.put(key, new NBTEmpty());
+        return this;
     }
 
     @NotNull
@@ -80,10 +89,10 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setBoolean(@NotNull String key, boolean value) {
+    public @NotNull NBTCompound setBoolean(@NotNull String key, boolean value) {
         tags.put(key, new NBTBoolean(value));
+        return this;
     }
-
     public boolean getBoolean(@NotNull String key) {
         return getBoolean(key, false);
     }
@@ -93,8 +102,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setByte(@NotNull String key, byte value) {
+    public @NotNull NBTCompound setByte(@NotNull String key, byte value) {
         tags.put(key, new NBTByte(value));
+        return this;
     }
     public byte getByte(@NotNull String key) {
         return getByte(key, (byte)0);
@@ -105,8 +115,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setChar(@NotNull String key, char value) {
+    public @NotNull NBTCompound setChar(@NotNull String key, char value) {
         tags.put(key, new NBTChar(value));
+        return this;
     }
     public char getChar(@NotNull String key) {
         return getChar(key, (char) 0);
@@ -117,8 +128,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setShort(@NotNull String key, short value) {
+    public @NotNull NBTCompound setShort(@NotNull String key, short value) {
         tags.put(key, new NBTShort(value));
+        return this;
     }
     public short getShort(@NotNull String key) {
         return getShort(key, (short) 0);
@@ -129,8 +141,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setInt(@NotNull String key, int value) {
+    public @NotNull NBTCompound setInt(@NotNull String key, int value) {
         tags.put(key, new NBTInt(value));
+        return this;
     }
     public int getInt(@NotNull String key) {
         return getInt(key, 0);
@@ -141,8 +154,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setLong(@NotNull String key, long value) {
+    public @NotNull NBTCompound setLong(@NotNull String key, long value) {
         tags.put(key, new NBTLong(value));
+        return this;
     }
     public long getLong(@NotNull String key) {
         return getLong(key, 0L);
@@ -153,8 +167,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setFloat(@NotNull String key, float value) {
+    public @NotNull NBTCompound setFloat(@NotNull String key, float value) {
         tags.put(key, new NBTFloat(value));
+        return this;
     }
     public float getFloat(@NotNull String key) {
         return getFloat(key, 0.0f);
@@ -165,8 +180,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setDouble(@NotNull String key, double value) {
+    public @NotNull NBTCompound setDouble(@NotNull String key, double value) {
         tags.put(key, new NBTDouble(value));
+        return this;
     }
     public double getDouble(@NotNull String key) {
         return getDouble(key, 0.0);
@@ -177,8 +193,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setString(@NotNull String key, @NotNull String value) {
+    public @NotNull NBTCompound setString(@NotNull String key, @NotNull String value) {
         tags.put(key, new NBTString(value));
+        return this;
     }
 
     public @NotNull String getString(@NotNull String key) {
@@ -190,8 +207,9 @@ public class NBTCompound implements NBTBase {
         else return def;
     }
 
-    public void setCompound(@NotNull String key, @NotNull NBTCompound value) {
+    public @NotNull NBTCompound setCompound(@NotNull String key, @NotNull NBTCompound value) {
         tags.put(key, value);
+        return this;
     }
 
     public @NotNull NBTCompound getCompound(@NotNull String key) {
@@ -200,8 +218,9 @@ public class NBTCompound implements NBTBase {
         else return new NBTCompound();
     }
 
-    public void setUuid(@NotNull String key, @NotNull UUID value) {
+    public @NotNull NBTCompound setUuid(@NotNull String key, @NotNull UUID value) {
         tags.put(key, new NBTUuid(value));
+        return this;
     }
     @NotNull
     public UUID getUuid(@NotNull String key) {
@@ -214,8 +233,9 @@ public class NBTCompound implements NBTBase {
         else return uuid;
     }
 
-    public void setStringList(@NotNull String key, @NotNull List<String> list) {
+    public @NotNull NBTCompound setStringList(@NotNull String key, @NotNull List<String> list) {
         tags.put(key, new NBTStringList(list));
+        return this;
     }
     public @NotNull List<String> getStringList(@NotNull String key) {
         List<String> list = getStringList(key, null);
@@ -224,6 +244,19 @@ public class NBTCompound implements NBTBase {
     public List<String> getStringList(@NotNull String key, List<String> def) {
         NBTBase base = tags.get(key);
         if(base instanceof NBTStringList stringList) return stringList.getValue();
+        else return def;
+    }
+    public @NotNull NBTCompound setItemStack(@NotNull String key, @NotNull ItemStack value) {
+        tags.put(key, new NBTItemStack(value));
+        return this;
+    }
+    public @NotNull ItemStack getItemStack(@NotNull String key) {
+        ItemStack itemStack = getItemStack(key, null);
+        return itemStack == null ? new ItemStack(Material.STONE) : itemStack;
+    }
+    public ItemStack getItemStack(@NotNull String key, ItemStack def) {
+        NBTBase base = tags.get(key);
+        if(base instanceof NBTItemStack itemStack) return itemStack.getValue();
         else return def;
     }
 
@@ -240,6 +273,14 @@ public class NBTCompound implements NBTBase {
         return stringbuilder.append('}').toString();
     }
 
+    @Override
+    public @NotNull NBTCompound copy() {
+        NBTCompound compound = new NBTCompound();
+        for(Map.Entry<String, NBTBase> entry : tags.entrySet()) {
+            compound.set(entry.getKey(), entry.getValue().copy());
+        }
+        return compound;
+    }
 
     @NotNull
     public String serialize() {

@@ -25,6 +25,7 @@ public class NBTFactory {
         NBT_CREATORS.put(NBTType.COMPOUND, wrapException(NBTCompound::new));
         NBT_CREATORS.put(NBTType.UUID, wrapException(NBTUuid::new));
         NBT_CREATORS.put(NBTType.STRING_LIST, wrapException(NBTStringList::new));
+        NBT_CREATORS.put(NBTType.ITEM_STACK, wrapException(NBTItemStack::new));
     }
 
     @NotNull

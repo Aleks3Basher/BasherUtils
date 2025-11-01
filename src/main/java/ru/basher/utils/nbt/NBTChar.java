@@ -39,6 +39,11 @@ public class NBTChar implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTChar(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

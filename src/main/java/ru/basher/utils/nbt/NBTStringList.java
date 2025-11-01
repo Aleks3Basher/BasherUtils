@@ -48,6 +48,11 @@ public class NBTStringList implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTStringList(new ArrayList<>(value));
+    }
+
+    @Override
     public String toString() {
         return value.toString();
     }

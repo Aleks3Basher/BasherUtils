@@ -9,10 +9,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class MenuItemStack {
 
     private final ItemStack itemStack;
-    @Getter
     private final List<Integer> slots = new ArrayList<>();
 
     public MenuItemStack(@NotNull ConfigurationSection section) {

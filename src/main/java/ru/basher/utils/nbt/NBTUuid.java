@@ -41,6 +41,11 @@ public class NBTUuid implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTUuid(new UUID(value.getMostSignificantBits(), value.getLeastSignificantBits()));
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }

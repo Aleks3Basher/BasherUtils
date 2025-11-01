@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.Material;
+import lombok.Setter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
@@ -22,11 +22,33 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import ru.basher.utils.ItemUtil;
 import ru.basher.utils.text.TextUtil;
 
+//# Все секции, которые оканчиваются на item(или полностью состоят из этого слова)
+//# И подразумевают под собой настройку предмета имеют следующие характеристики:
+//# (Уточнение: ЛЮБАЯ секция может быть удалена из характеристик)
+//#   item:
+//#     name: '&eExampleName'
+//#     lore:
+//#       - '&7Example lore'
+//#     material: 'STONE' # Любой материал или 'base64-asdaf...'
+//#     color: '255;255;255' # Формат Red;Green;Blue. Все числа 0-255. Параметр работает для TIPPED_ARROW и POTION(+его производных)
+//#     amount: 1
+//#     enchants:
+//#       - 'ARROW_DAMAGE;1' # Зачарование;Уровень
+//#     itemFlags:
+//#       - 'HIDE_ENCHANTS'
+//#     attributes:
+//#       - 'GENERIC_MAX_HEALTH;20'
+//#       - 'GENERIC_ATTACK_DAMAGE;-3'
+//#       - 'GENERIC_LUCK;20%'
+//#       - 'GENERIC_ATTACK_SPEED;-20%'
+//#     customModelData: 0
+//#     damage: 0 # Урон предмета. Устанавливается как максимальная_прочность - damage = текущая_прочность
+
 @Getter
+@Setter
 @AllArgsConstructor
 public class ItemStackGenerator {
 
@@ -140,7 +162,7 @@ public class ItemStackGenerator {
         return itemStack;
     }
 
-    public void combine(@NotNull ItemStackGenerator child) {
+    public void combine(@NotNull ItemStackGenerator child, boolean isChildPriority) {
         if (this.name.isEmpty()) {
             this.name = child.getName();
         } else {
@@ -153,9 +175,9 @@ public class ItemStackGenerator {
             new Replace("{lore}", child.getLore()).apply(this.lore);
         }
 
-        this.material = child.getMaterial();
+        this.material = isChildPriority ? child.getMaterial() : this.material;
 
-        this.amount = child.getAmount();
+        this.amount = isChildPriority ? child.getAmount() : this.amount;
 
         for(Entry<Enchantment, Integer> entry : child.getEnchants().entrySet()) {
             this.enchants.merge(entry.getKey(), entry.getValue(), Integer::sum);
@@ -173,13 +195,8 @@ public class ItemStackGenerator {
             }
         }
 
-        if (child.getCustomModelData() != 0) {
-            this.customModelData = child.getCustomModelData();
-        }
-
-        if (child.getDamage() != 0) {
-            this.damage = child.getDamage();
-        }
+        this.customModelData = isChildPriority ? child.getCustomModelData() : this.customModelData;
+        this.damage = isChildPriority ? child.getDamage() : this.damage;
     }
 
     @NotNull

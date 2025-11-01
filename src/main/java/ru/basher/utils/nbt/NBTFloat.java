@@ -39,6 +39,11 @@ public class NBTFloat implements NBTBase {
     }
 
     @Override
+    public @NotNull NBTBase copy() {
+        return new NBTFloat(value);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(value);
     }
