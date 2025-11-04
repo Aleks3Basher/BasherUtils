@@ -52,7 +52,15 @@ public class MenuServiceImpl {
     }
 
     public void openMenuAsync(@NotNull Player player, @NotNull Supplier<Menu> constructor) {
-        CompletableFuture.supplyAsync(constructor).thenAccept(menu -> {
+        CompletableFuture.supplyAsync(()-> {
+            try {
+                return constructor.get();
+            } catch (Exception e) {
+                plugin.getLogger().warning(e.getMessage());
+                return null;
+            }
+        }).thenAccept(menu -> {
+            if(menu == null) return;
             Bukkit.getScheduler().runTask(plugin, () -> menu.open(player));
         });
     }

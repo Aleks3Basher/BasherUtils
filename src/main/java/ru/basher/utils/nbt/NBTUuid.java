@@ -12,7 +12,7 @@ import java.util.UUID;
 @Setter
 public class NBTUuid implements NBTBase {
 
-    private final NBTType type = NBTType.LONG;
+    private final NBTType type = NBTType.UUID;
     private UUID value;
 
     public NBTUuid(UUID value) {

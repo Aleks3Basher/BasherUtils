@@ -5,6 +5,7 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,22 +24,29 @@ public abstract class CustomMaterial {
             Material material = Material.getMaterial(value.toUpperCase());
             if (material == null) material = Material.STONE;
 
-            if (!material.name().contains("POTION") && material != Material.TIPPED_ARROW) {
-                return new Default(material);
-            } else {
-                Color color = null;
-                String rgb = section.getString("color", null);
-                if (rgb != null) {
-                    try {
-                        String[] arr = rgb.split(";");
-                        color = Color.fromRGB(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2]));
-                    } catch (Exception ignored) {
-                    }
-                }
-
+            if(material.name().contains("POTION") || material == Material.TIPPED_ARROW) {
+                Color color = getColor(section);
                 return new Potion(material, color);
+            } else if(material.name().contains("LEATHER_")) {
+                Color color = getColor(section);
+                return new LeatherArmor(material, color);
+            } else {
+                return new Default(material);
             }
         }
+    }
+
+    private static @Nullable Color getColor(@NotNull ConfigurationSection section) {
+        Color color = null;
+        String rgb = section.getString("color", null);
+        if (rgb != null) {
+            try {
+                String[] arr = rgb.split(";");
+                color = Color.fromRGB(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2]));
+            } catch (Exception ignored) {
+            }
+        }
+        return color;
     }
 
     @RequiredArgsConstructor
@@ -78,6 +86,24 @@ public abstract class CustomMaterial {
                 itemStack.setItemMeta(meta);
             }
 
+            return itemStack;
+        }
+    }
+
+    @RequiredArgsConstructor
+    public static class LeatherArmor extends CustomMaterial {
+        private final Material material;
+        @Nullable
+        private final Color color;
+
+        @Override
+        public ItemStack getItemStack() {
+            ItemStack itemStack = new ItemStack(material);
+            if(color != null) {
+                LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
+                meta.setColor(color);
+                itemStack.setItemMeta(meta);
+            }
             return itemStack;
         }
     }
