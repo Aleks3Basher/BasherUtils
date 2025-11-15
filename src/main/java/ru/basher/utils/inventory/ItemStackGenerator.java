@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
@@ -33,7 +34,7 @@ import ru.basher.utils.text.TextUtil;
 //#     lore:
 //#       - '&7Example lore'
 //#     material: 'STONE' # Любой материал или 'base64-asdaf...'
-//#     color: '255;255;255' # Формат Red;Green;Blue. Все числа 0-255. Параметр работает для TIPPED_ARROW и POTION(+его производных)
+//#     color: '255;255;255' # Формат Red;Green;Blue. Все числа 0-255. Параметр работает для TIPPED_ARROW, LEATHER брони и POTION(+его производных)
 //#     amount: 1
 //#     enchants:
 //#       - 'ARROW_DAMAGE;1' # Зачарование;Уровень
@@ -46,6 +47,9 @@ import ru.basher.utils.text.TextUtil;
 //#       - 'GENERIC_ATTACK_SPEED;-20%'
 //#     customModelData: 0
 //#     damage: 0 # Урон предмета. Устанавливается как максимальная_прочность - damage = текущая_прочность
+//#     slot: 1 # Важный параметр для настроек предметов в меню
+//#     slots: # Аналог параметра slot, но для нескольких значений
+//#       - 1
 
 @Getter
 @Setter
@@ -61,6 +65,10 @@ public class ItemStackGenerator {
     private List<ItemAttribute> attributes = new ArrayList<>();
     private int customModelData;
     private int damage;
+
+    public ItemStackGenerator() {
+        this("", new ArrayList<>(), new CustomMaterial.Default(Material.STONE), 1, new HashMap<>(), new ArrayList<>(), new ArrayList<>(), 0, 0);
+    }
 
     public ItemStackGenerator(@NotNull ConfigurationSection section) {
         name = TextUtil.toColor(section.getString("name", ""));

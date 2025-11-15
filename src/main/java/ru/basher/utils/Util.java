@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_16_R3.CraftChunk;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 public class Util {

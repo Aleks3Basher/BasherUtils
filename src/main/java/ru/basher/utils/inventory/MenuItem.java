@@ -15,6 +15,10 @@ public class MenuItem {
     private final ItemStackGenerator generator;
     private final List<Integer> slots = new ArrayList<>();
 
+    public MenuItem() {
+        generator = new ItemStackGenerator();
+    }
+
     public MenuItem(@NotNull ConfigurationSection section) {
         generator = new ItemStackGenerator(section);
         if (section.contains("slots")) {

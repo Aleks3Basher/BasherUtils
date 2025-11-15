@@ -26,7 +26,7 @@ public class ChatMessage {
     }
 
     public @NotNull TextComponent toComponent() {
-        return textComponent;
+        return textComponent == null ? new TextComponent() : textComponent;
     }
 
     public static @NotNull TextComponent fromLegacy(@NotNull String message) {
