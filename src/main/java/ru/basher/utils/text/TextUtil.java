@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,9 +25,9 @@ public class TextUtil {
         String message = legacyMsg.replace("§", "&");
 
         String hex;
-        for(Matcher matcher = Pattern.compile("&#[A-Fa-f0-9]{6}").matcher(message);
-            matcher.find();
-            message = message.replace("&" + hex, ChatColor.of(hex) + "")
+        for (Matcher matcher = Pattern.compile("&#[A-Fa-f0-9]{6}").matcher(message);
+             matcher.find();
+             message = message.replace("&" + hex, ChatColor.of(hex) + "")
         ) {
             hex = matcher.group().substring(1);
         }
@@ -40,9 +41,9 @@ public class TextUtil {
         String message = text.replace("§", "&");
         String hex;
         if (colors.contains(TextColor.HEX)) {
-            for(Matcher matcher = Pattern.compile("&#[A-Fa-f0-9]{6}").matcher(message);
-                matcher.find();
-                message = message.replace("&" + hex, ChatColor.of(hex) + "")
+            for (Matcher matcher = Pattern.compile("&#[A-Fa-f0-9]{6}").matcher(message);
+                 matcher.find();
+                 message = message.replace("&" + hex, ChatColor.of(hex) + "")
             ) {
                 hex = matcher.group().substring(1);
             }
@@ -50,7 +51,7 @@ public class TextUtil {
             message = message.replaceAll("&#[A-Fa-f0-9]{6}", "");
         }
 
-        for(TextColor type : colors) {
+        for (TextColor type : colors) {
             if (type != TextColor.HEX) {
                 message = message.replace("&" + type.getCharId(), "§" + type.getCharId());
             }
@@ -65,8 +66,8 @@ public class TextUtil {
 
     public static void putAndColor(ConfigurationSection config, @NotNull List<String> to, @NotNull String path) {
         to.clear();
-        for(String s : config.getStringList(path)) {
-            if(s == null) continue;
+        for (String s : config.getStringList(path)) {
+            if (s == null) continue;
             to.add(toColor(s));
         }
     }
@@ -97,9 +98,9 @@ public class TextUtil {
     }
 
     public static @NotNull String formatTime(long allSeconds) {
-        int days = (int)(allSeconds / 86400L);
-        int hours = (int)(allSeconds % 86400L / 3600L);
-        int minutes = (int)(allSeconds % 3600L / 60L);
+        int days = (int) (allSeconds / 86400L);
+        int hours = (int) (allSeconds % 86400L / 3600L);
+        int minutes = (int) (allSeconds % 3600L / 60L);
         StringBuilder time = new StringBuilder();
         if (days > 0) {
             time.append(days).append(" ").append(getForm(days, "день", "дня", "дней"));
@@ -123,10 +124,10 @@ public class TextUtil {
     }
 
     public static @NotNull String formatTimeWithSeconds(long allSeconds) {
-        int days = (int)(allSeconds / 86400L);
-        int hours = (int)(allSeconds % 86400L / 3600L);
-        int minutes = (int)(allSeconds % 3600L / 60L);
-        int seconds = (int)(allSeconds % 60L);
+        int days = (int) (allSeconds / 86400L);
+        int hours = (int) (allSeconds % 86400L / 3600L);
+        int minutes = (int) (allSeconds % 3600L / 60L);
+        int seconds = (int) (allSeconds % 60L);
         StringBuilder time = new StringBuilder();
         if (days > 0) {
             time.append(days).append(" ").append(getForm(days, "день", "дня", "дней"));
@@ -161,7 +162,7 @@ public class TextUtil {
         if (number >= 11 && number <= 14) {
             return many;
         } else {
-            return switch(number % 10) {
+            return switch (number % 10) {
                 case 1 -> one;
                 case 2, 3, 4 -> few;
                 default -> many;
@@ -170,7 +171,12 @@ public class TextUtil {
     }
 
     public static @NotNull Component jsonToComponent(@NotNull String json) {
-        return GsonComponentSerializer.gson().deserialize(json);
+        if (json.isEmpty()) return Component.empty();
+        try {
+            return GsonComponentSerializer.gson().deserialize(json);
+        } catch (Exception e) {
+            return Component.empty();
+        }
     }
 
 }

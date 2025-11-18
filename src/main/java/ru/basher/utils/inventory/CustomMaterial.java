@@ -13,7 +13,8 @@ import ru.basher.utils.ItemUtil;
 
 public abstract class CustomMaterial {
 
-    public abstract ItemStack getItemStack();
+    public abstract @NotNull ItemStack getItemStack();
+    public abstract @NotNull Material getType();
 
     @NotNull
     public static CustomMaterial of(@NotNull ConfigurationSection section) {
@@ -54,8 +55,13 @@ public abstract class CustomMaterial {
         private final Material material;
 
         @Override
-        public ItemStack getItemStack() {
+        public @NotNull ItemStack getItemStack() {
             return new ItemStack(material, 1);
+        }
+
+        @Override
+        public @NotNull Material getType() {
+            return material;
         }
     }
 
@@ -64,10 +70,15 @@ public abstract class CustomMaterial {
         private final String base64;
 
         @Override
-        public ItemStack getItemStack() {
+        public @NotNull ItemStack getItemStack() {
             ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD, 1);
             ItemUtil.setSkull(itemStack, base64);
             return itemStack;
+        }
+
+        @Override
+        public @NotNull Material getType() {
+            return Material.PLAYER_HEAD;
         }
     }
 
@@ -78,7 +89,7 @@ public abstract class CustomMaterial {
         private final Color color;
 
         @Override
-        public ItemStack getItemStack() {
+        public @NotNull ItemStack getItemStack() {
             ItemStack itemStack = new ItemStack(material);
             if (color != null) {
                 PotionMeta meta = (PotionMeta)itemStack.getItemMeta();
@@ -87,6 +98,11 @@ public abstract class CustomMaterial {
             }
 
             return itemStack;
+        }
+
+        @Override
+        public @NotNull Material getType() {
+            return material;
         }
     }
 
@@ -97,7 +113,7 @@ public abstract class CustomMaterial {
         private final Color color;
 
         @Override
-        public ItemStack getItemStack() {
+        public @NotNull ItemStack getItemStack() {
             ItemStack itemStack = new ItemStack(material);
             if(color != null) {
                 LeatherArmorMeta meta = (LeatherArmorMeta) itemStack.getItemMeta();
@@ -105,6 +121,11 @@ public abstract class CustomMaterial {
                 itemStack.setItemMeta(meta);
             }
             return itemStack;
+        }
+
+        @Override
+        public @NotNull Material getType() {
+            return material;
         }
     }
 }
