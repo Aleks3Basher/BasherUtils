@@ -6,7 +6,7 @@
 
     <groupId>ru.basher</groupId>
     <artifactId>BasherUtils</artifactId>
-    <version>1.1.3</version>
+    <version>1.1.4</version>
 
     <properties>
         <java.version>16</java.version>
