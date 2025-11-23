@@ -4,9 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.basher</groupId>
+    <groupId>ru.basher.utils</groupId>
     <artifactId>BasherUtils</artifactId>
-    <version>1.1.5</version>
+    <version>standard</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>Core</module>
+        <module>API</module>
+        <module>Classic</module>
+        <module>v1_16_5</module>
+        <module>v1_20_4</module>
+    </modules>
 
     <properties>
         <java.version>16</java.version>
@@ -18,22 +26,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.destroystokyo.paper</groupId>-->
-<!--            <artifactId>paper-api</artifactId>-->
-<!--            <version>1.20.4</version>-->
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${projectDir}\libs\paper-1.20.4-api.jar</systemPath>-->
-<!--        </dependency>-->
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
+            <version>1.18.40</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
