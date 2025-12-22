@@ -2,6 +2,7 @@ package ru.basher.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,29 +36,32 @@ public class Util {
             if (action.startsWith("CHAT:")) {
                 text = action.replace("CHAT:", "");
                 player.chat(text);
-                continue;
-            }
-            if (action.startsWith("MESSAGE:")) {
+            } else if (action.startsWith("MESSAGE:")) {
                 text = action.replace("MESSAGE:", "");
                 player.sendMessage(text);
-                continue;
-            }
-            if (action.startsWith("COMMAND:")) {
+            } else if (action.startsWith("COMMAND:")) {
                 text = action.replace("COMMAND:", "");
-                Bukkit.dispatchCommand(player, text);
-                continue;
-            }
-            if (action.startsWith("BROADCAST:")) {
+                player.chat("/" + text);
+            } else if (action.startsWith("BROADCAST:")) {
                 text = action.replace("BROADCAST:", "").replace("{playerName}", player.getName());
-                for (Player pl : Bukkit.getOnlinePlayers()) {
-                    if (pl == null) continue;
-                    pl.sendMessage(text);
+                for (Player target : Bukkit.getOnlinePlayers()) {
+                    if (target == null) continue;
+                    target.sendMessage(text);
                 }
-                continue;
+            } else if (action.startsWith("CONSOLE:")) {
+                text = action.replace("CONSOLE:", "").replace("{playerName}", player.getName());
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text);
+            } else if (action.startsWith("SOUND:")) {
+                text = action.replace("SOUND:", "");
+                String[] arr = text.split(";");
+                try {
+                    Sound sound = Sound.valueOf(arr[0].toUpperCase());
+                    float volume = Float.parseFloat(arr[1]);
+                    float pitch = Float.parseFloat(arr[2]);
+                    player.playSound(player.getLocation(), sound, volume, pitch);
+                } catch (Exception ignored) {
+                }
             }
-            if (!action.startsWith("CONSOLE:")) continue;
-            text = action.replace("CONSOLE:", "").replace("{playerName}", player.getName());
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), text);
         }
     }
 
