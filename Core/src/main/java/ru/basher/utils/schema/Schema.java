@@ -5,34 +5,38 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.basher.utils.location.V3;
 import ru.basher.utils.nbt.NBTBase;
 import ru.basher.utils.nbt.NBTCompound;
+import ru.basher.utils.schema.point.SchemaPoint;
+import ru.basher.utils.schema.point.SchemaPoints;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Sign Pattern:
+ * [point]
+ * identifier
+ * text_value
+ */
 @Getter
 public class Schema {
 
     private final String id;
-
     private final Map<V3, BlockData> blocks = new HashMap<>();
+    private final Map<String, SchemaPoints> points = new HashMap<>();
 
     public Schema(String id) {
         this.id = id;
     }
 
-    public Schema(String id, Map<V3, BlockData> blocks) {
-        this.id = id;
-        this.blocks.putAll(blocks);
-    }
-
     public Schema(String id, NBTCompound compound) {
-        this.id = id;
+        this(id);
         NBTCompound blocksComp = compound.getCompound("blocks");
         for (Map.Entry<String, NBTBase> entry : blocksComp.getTags().entrySet()) {
             String[] locationArr = entry.getKey().split(";");
@@ -43,6 +47,11 @@ public class Schema {
                 blocks.put(location, blockData);
             } catch (Exception ignored) {
             }
+        }
+        NBTCompound pointsComp = compound.getCompound("points");
+        for (Map.Entry<String, NBTBase> entry : pointsComp.getTags().entrySet()) {
+            SchemaPoints list = new SchemaPoints(entry.getValue().asCompound());
+            points.put(entry.getKey(), list);
         }
     }
 
@@ -70,6 +79,7 @@ public class Schema {
         V3 maxLoc = V3.max(oneLocation, twoLocation);
 
         blocks.clear();
+        points.clear();
         for (int x = minLoc.getX(); x <= maxLoc.getX(); x++) {
             for (int y = minLoc.getY(); y <= maxLoc.getY(); y++) {
                 for (int z = minLoc.getZ(); z <= maxLoc.getZ(); z++) {
@@ -77,6 +87,17 @@ public class Schema {
                     if(block.getType().isAir()) continue;
 
                     V3 offset = new V3(x - minLoc.getX(), y - minLoc.getY(), z - minLoc.getZ());
+                    BlockData blockData = block.getBlockData();
+                    if(blockData instanceof Sign signData) {
+                        String[] lines = signData.getLines();
+                        if(lines.length >= 2 && lines[0].equals("[point]")) {
+                            String id = lines[1];
+                            String text = lines.length > 2 ? lines[2] : "";
+                            SchemaPoint point = new SchemaPoint(offset, text);
+                            points.computeIfAbsent(id, k -> new SchemaPoints()).put(point);
+                            continue;
+                        }
+                    }
                     blocks.put(offset, block.getBlockData().clone());
                 }
             }
@@ -91,6 +112,11 @@ public class Schema {
             blocksComp.setString(loc.getX() + ";" + loc.getY() + ";" + loc.getZ(), entry.getValue().getAsString());
         }
         compound.set("blocks", blocksComp);
+        NBTCompound pointsComp = new NBTCompound();
+        for (Map.Entry<String, SchemaPoints> entry : points.entrySet()) {
+            pointsComp.setCompound(entry.getKey(), entry.getValue().toCompound());
+        }
+        compound.set("points", pointsComp);
         return compound;
     }
 
@@ -112,11 +138,10 @@ public class Schema {
     }
 
     @Override
-    public boolean equals(@Nullable Object o) {
-        if (this == o) return true;
-        else if (o != null && this.getClass() == o.getClass()) {
-            Schema obj = (Schema) o;
-            return id.equals(obj.id);
-        } else return false;
+    public boolean equals(final @Nullable Object obj) {
+        if (this == obj) return true;
+        if (obj == null || this.getClass() != obj.getClass()) return false;
+        Schema object = (Schema) obj;
+        return id.equals(object.getId());
     }
 }
